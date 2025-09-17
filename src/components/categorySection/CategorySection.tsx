@@ -16,7 +16,7 @@ function CategorySection() {
         console.error("Error fetching categories:", error);
       }
     };
-    fetchCategory(); // Fixed incorrect function call
+    fetchCategory();
   }, []);
 
   return (

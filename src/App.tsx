@@ -11,10 +11,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
-        <ToastContainer />
-        <Header />
-        <Outlet />
-        <Footer />
+        <div className="flex min-h-screen flex-col">
+          <ToastContainer />
+          <Header />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
       </AuthContextProvider>
     </QueryClientProvider>
   );
