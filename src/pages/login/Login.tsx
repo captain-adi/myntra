@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useLogin } from "../../hooks/query";
 
 function Login() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<{
+    email: string;
+    password: string;
+  }>();
   const navigate = useNavigate();
   const { mutate } = useLogin();
 
