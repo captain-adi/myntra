@@ -1,35 +1,28 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Star } from "lucide-react";
 import { Heart, IndianRupee, Handbag } from "lucide-react";
-import axios from "../../api/apiconfig";
 import ProductSkeleton from "../../components/skeletons/ProductSkeleton";
 import type { IProduct } from "../../components/productCard/ProductCard";
+import { useBag } from "../../context/BagContext";
 
 const Product = () => {
-  const addToCart = () => {
+  const { bagItems, setBagItems, products } = useBag();
+
+  const addToCart = (product: IProduct) => {
     toast.success("ADDED TO BAG");
+    setBagItems([...bagItems, product]);
   };
   const addToWishlist = () => toast.success("ADDED TO WISHLIST");
   const [product, setProduct] = useState<IProduct | null>(null);
   const { id } = useParams();
 
   useEffect(() => {
-    const datafetch = async () => {
-      try {
-        const apiResponse = await axios("/product");
-        const responseData = apiResponse.data.data;
-        console.log("response data is : ", responseData);
-        const filteredData = responseData.filter(
-          (obj: IProduct) => obj._id === id
-        );
-        setProduct(filteredData[0]);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    datafetch();
+    const filteredData = products.filter(
+      (product: IProduct) => product._id === id
+    );
+    setProduct(filteredData[0]);
   }, [id]);
 
   if (!product) {
@@ -38,8 +31,6 @@ const Product = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <ToastContainer autoClose={3000} />
-
       <div className="grid md:grid-cols-2 gap-10">
         {/* Image Section */}
         <div className="space-y-4">
@@ -87,7 +78,7 @@ const Product = () => {
           <div className="flex  gap-10">
             <button
               className="w-full flex justify-center items-center gap-4  md:w-auto px-8 py-3 bg-[#FF3E6C] text-white font-semibold rounded-sm hover:bg-[#FF5C7E] transition cursor-pointer hover:shadow-lg"
-              onClick={addToCart}
+              onClick={() => addToCart(product)}
             >
               <Handbag className="mt-1 text-xl" />
               ADD TO BAG

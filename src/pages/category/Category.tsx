@@ -4,7 +4,7 @@ import ProductCard, {
   type IProduct,
 } from "../../components/productCard/ProductCard";
 import axios from "../../api/apiconfig";
-import ProductCardSkeleton from "../../components/skeletons/ProductCardSkeleton";
+import ProductCardSkeleton from "../../components/productCard/ProductCardSkeleton";
 import handleError from "../../utils/errorHandler";
 
 function Category() {

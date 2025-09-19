@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "../api/apiconfig";
 import type { IApiResponse, IErrorResponse } from "../type/type";
 import handleError from "../utils/errorHandler";
@@ -37,6 +37,16 @@ export const useLogout = () => {
     },
     onError: (error: IErrorResponse) => {
       handleError(error);
+    },
+  });
+};
+
+export const usefetchProducts = () => {
+  return useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await axios.get("/product");
+      return res.data;
     },
   });
 };
