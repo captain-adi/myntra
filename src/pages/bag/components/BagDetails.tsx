@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useBag } from "../../../context/BagContext";
+import { useState } from "react";
 
 function BagDetails() {
-  const { bagItems } = useBag();
-  const donation = "0";
+  const { bagItems, setPriceDetails } = useBag();
+  const [wantDonation, setWantDonation] = useState(false);
+  const [donation, setDonation] = useState("0");
   let totalMRP = 0;
   let totalDiscount = 0;
   let shippingFee = 0;
@@ -15,8 +17,18 @@ function BagDetails() {
   });
   let finalMRP = totalMRP + Number(donation);
   platFormFee = bagItems.length > 0 ? 0 : 20;
-  shippingFee = Number(finalMRP < 1000 ? 50 : "FREE");
+  shippingFee = Number(finalMRP < 1000 ? 50 : 0);
   finalMRP += shippingFee + platFormFee;
+
+  const handlePriceDetails = () => {
+    setPriceDetails({
+      totalPrice: totalMRP,
+      discount: totalDiscount,
+      platformFee: platFormFee,
+      totalAmount: finalMRP,
+      shippingFee: shippingFee,
+    });
+  };
 
   return (
     <div className="border p-4 rounded-md shadow-sm bg-white w-full max-w-md">
@@ -36,14 +48,27 @@ function BagDetails() {
       {/* Donation Section */}
       <div className="mb-4">
         <label className="flex items-center space-x-2 mb-2 font-medium text-gray-700">
-          <input type="checkbox" className="accent-pink-500" />
+          <input
+            type="checkbox"
+            checked={wantDonation}
+            onChange={() => {
+              setWantDonation(!wantDonation);
+              console.log(wantDonation);
+              if (!wantDonation === false) {
+                setDonation("0");
+              }
+            }}
+            className="accent-pink-500"
+          />
           <span>Donate and make a difference</span>
         </label>
         <div className="flex gap-2 mb-1">
           {["10", "20", "50", "100"].map((amt) => (
             <button
               key={amt}
-              className="border   px-3 py-1 rounded-full text-sm hover:bg-gray-100"
+              className="border   px-3 py-1 rounded-full text-sm hover:bg-gray-100 cursor-pointer disabled:cursor-not-allowed disabled:text-gray-400 disabled:border-gray-300"
+              onClick={() => setDonation(amt)}
+              disabled={!wantDonation}
             >
               ₹{amt}
             </button>
@@ -95,7 +120,9 @@ function BagDetails() {
               Know More
             </button>
           </span>
-          <span className="text-green-500">{shippingFee}</span>
+          <span className="text-green-500">
+            {shippingFee ? `₹${shippingFee}` : "FREE"}
+          </span>
         </div>
       </div>
 
@@ -114,8 +141,11 @@ function BagDetails() {
       </div>
 
       {/* Place Order Button */}
-      <Link to={"/address"}>
-        <button className="w-full bg-pink-500 text-white font-bold py-2 rounded-sm hover:bg-pink-600 transition">
+      <Link to={"/checkout/address"}>
+        <button
+          className="w-full bg-pink-500 text-white font-bold py-2 rounded-sm hover:bg-pink-600 transition cursor-pointer"
+          onClick={() => handlePriceDetails()}
+        >
           PLACE ORDER
         </button>
       </Link>

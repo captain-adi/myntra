@@ -3,10 +3,12 @@ import { Search, Heart, Handbag, User, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import ProfileDropdown from "../profileDropdown/ProfileDropdown";
+import { useBag } from "../../context/BagContext";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useAuth();
+  const { bagItems } = useBag();
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50 ">
@@ -62,11 +64,14 @@ function Header() {
             <Heart className="text-2xl" />
             <span className="text-[0.7rem]">Wishlist</span>
           </Link>
-          <Link to="/bag" className="flex flex-col items-center relative">
+          <Link
+            to="/checkout/bag"
+            className="flex flex-col items-center relative"
+          >
             <Handbag className="text-2xl" />
-            {/* <span className="absolute -top-2 left-3.5 rounded-full bg-red-500 p-0.5 px-2 text-sm text-white">
+            <span className="absolute -top-2 left-3.5 rounded-full bg-red-500 p-0.5 px-2 text-sm text-white">
               {bagItems.length}
-            </span> */}
+            </span>
             <span className="text-[0.7rem]">Bag</span>
           </Link>
         </div>

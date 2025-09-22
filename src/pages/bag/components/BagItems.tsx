@@ -2,14 +2,24 @@ import { Delete } from "lucide-react";
 import { toast } from "react-toastify";
 import type { IProduct } from "../../../components/productCard/ProductCard";
 
-function BagItems({ bagItems }: { bagItems: IProduct[] }) {
+interface IBagItemsProps {
+  bagItems: IProduct[];
+  setBagItems: (items: IProduct[]) => void;
+}
+
+function BagItems({ bagItems, setBagItems }: IBagItemsProps) {
   const date = new Date();
 
+  const handleRemoveFromBag = (id: number) => {
+    const updatedItems = bagItems.filter((item) => item.id !== id);
+    setBagItems(updatedItems);
+    toast.success("Item removed from bag");
+  };
   return (
     <>
-      {bagItems.map((product: IProduct) => (
-        <div className="flex  border text-sm" key={product.id}>
-          <div className="item-left-part p-3 w-40 h-40 rounded-md shadow-md">
+      {bagItems.map((product) => (
+        <div className="bag-item-container" key={product.id}>
+          <div className="item-left-part  rounded-md shadow-sm p-3">
             <img
               className="bag-item-img h-full w-full  object-contain"
               src={product.images[0]}
@@ -17,7 +27,7 @@ function BagItems({ bagItems }: { bagItems: IProduct[] }) {
             />
           </div>
 
-          <div className=" border-4 w-full  pl-3 relative  ">
+          <div className="item-right-part">
             <div className="company">{product.brand}</div>
             <div className="item-name">{product.title}</div>
             <div className="price-container flex gap-3">
@@ -29,24 +39,21 @@ function BagItems({ bagItems }: { bagItems: IProduct[] }) {
                 {product.discountPercentage}%
               </span>
             </div>
-            <div className=" text-sm pt-2.5">
+            <div className="return-period">
               <span className="return-period-days">14 days</span> return
               available
             </div>
-            <div className="delivery-details mt-1.5 text-sm mb-2 ">
+            <div className="delivery-details">
               Delivery by{" "}
-              <span className="delivery-details-days  ">
+              <span className="delivery-details-days">
                 {date.getDate() + 3}
               </span>
+              <div>{product.quantity}</div>
             </div>
           </div>
 
-          <div className="remove-from-cart  text-[25px] top-2.5 right-4 w-3.5 cursor-pointer">
-            <Delete
-              onClick={() => {
-                toast.success("Item Removed from Bag");
-              }}
-            />
+          <div className="remove-from-cart">
+            <Delete onClick={() => handleRemoveFromBag(product.id)} />
           </div>
         </div>
       ))}

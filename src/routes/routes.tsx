@@ -6,8 +6,11 @@ import App from "../App";
 import Category from "../pages/category/Category";
 import Product from "../pages/product/Product";
 import WishList from "../pages/wishList/WishList";
-import Bag from "../pages/bag/Bag";
+import Bag from "../pages/bag/components/Bag";
 import ProtectedRoute from "../components/protectedRoute/ProtectedRoute";
+import BagLayout from "../pages/bag/Index";
+import Address from "../pages/address/Address";
+import Payment from "../pages/payment/Payment";
 
 const router = createBrowserRouter([
   {
@@ -27,13 +30,27 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+    ],
+  },
+  {
+    path: "/checkout",
+    element: <BagLayout />,
+    children: [
       {
-        path: "/bag",
+        path: "/checkout/bag",
         element: (
           <ProtectedRoute>
             <Bag />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "/checkout/address",
+        element: <Address />,
+      },
+      {
+        path: "/checkout/payment",
+        element: <Payment />,
       },
     ],
   },

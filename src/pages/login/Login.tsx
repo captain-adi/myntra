@@ -8,7 +8,7 @@ function Login() {
     password: string;
   }>();
   const navigate = useNavigate();
-  const { mutate } = useLogin();
+  const { mutate, isPending } = useLogin();
 
   const onSubmit = (data: { email: string; password: string }) => {
     mutate(data, {
@@ -33,6 +33,7 @@ function Login() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
             <input
+              disabled={isPending}
               {...register("email")}
               type="email"
               placeholder="📧 Email"
@@ -41,6 +42,7 @@ function Login() {
           </div>
           <div>
             <input
+              disabled={isPending}
               {...register("password")}
               type="password"
               placeholder="🔒 Password"
@@ -49,10 +51,11 @@ function Login() {
           </div>
 
           <button
+            disabled={isPending}
             type="submit"
             className="w-full cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-semibold py-3 rounded-xl shadow-lg transform transition hover:scale-105"
           >
-            Login
+            {isPending ? "Logging in..." : "Login"}
           </button>
         </form>
 

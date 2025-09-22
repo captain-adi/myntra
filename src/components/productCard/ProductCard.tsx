@@ -27,7 +27,7 @@ export interface IProduct {
   thumbnail: string;
   originalPrice: number;
   tags: string[];
-  id: string;
+  id: number;
   availabilityStatus: string;
   returnPolicy: string;
   minimumOrderQuantity: number;

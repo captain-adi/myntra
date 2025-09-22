@@ -9,21 +9,32 @@ import { useBag } from "../../context/BagContext";
 
 const Product = () => {
   const { bagItems, setBagItems, products } = useBag();
+  const { id } = useParams();
+  const quantity = 1;
 
   const addToCart = (product: IProduct) => {
     toast.success("ADDED TO BAG");
-    setBagItems([...bagItems, product]);
+    const isInBag =
+      bagItems.filter((item) => item.id === product.id).length > 0;
+    if (isInBag) {
+      setBagItems(
+        bagItems.map((item) =>
+          item.id === product.id ? { ...item, quantity: quantity + 1 } : item
+        )
+      );
+    } else {
+      setBagItems([...bagItems, { ...product, quantity }]);
+    }
   };
   const addToWishlist = () => toast.success("ADDED TO WISHLIST");
   const [product, setProduct] = useState<IProduct | null>(null);
-  const { id } = useParams();
 
   useEffect(() => {
     const filteredData = products.filter(
       (product: IProduct) => product._id === id
     );
     setProduct(filteredData[0]);
-  }, [id]);
+  }, [products]);
 
   if (!product) {
     return <ProductSkeleton />;

@@ -1,0 +1,17 @@
+import CheckoutHeader from "./components/CheckoutHeader";
+import { Outlet } from "react-router-dom";
+import Footer from "../../components/footer/Footer";
+
+function BagLayout() {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <CheckoutHeader />
+      <main className="flex-1 container mx-auto px-4">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+export default BagLayout;
