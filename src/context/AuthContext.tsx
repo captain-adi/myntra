@@ -30,6 +30,7 @@ export const AuthContextProvider = ({
     const checkLogin = async () => {
       const res = await axios.get("/auth/is-auth");
       setUser(res.data.data.user);
+      setAddress(res.data.data.user.address || []);
       console.log("is-auth res:", res.data);
     };
     checkLogin();
