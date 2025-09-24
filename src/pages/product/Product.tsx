@@ -8,7 +8,8 @@ import type { IProduct } from "../../components/productCard/ProductCard";
 import { useBag } from "../../context/BagContext";
 
 const Product = () => {
-  const { bagItems, setBagItems, products } = useBag();
+  const { bagItems, setBagItems, products, wishlistItems, setWishlistItems } =
+    useBag();
   const { id } = useParams();
   const quantity = 1;
 
@@ -26,7 +27,14 @@ const Product = () => {
       setBagItems([...bagItems, { ...product, quantity }]);
     }
   };
-  const addToWishlist = () => toast.success("ADDED TO WISHLIST");
+  const addToWishlist = (product: IProduct) => {
+    toast.success("ADDED TO WISHLIST");
+    const isInWishlist =
+      wishlistItems.filter((item) => item.id === product.id).length > 0;
+    if (!isInWishlist) {
+      setWishlistItems([...wishlistItems, product]);
+    }
+  };
   const [product, setProduct] = useState<IProduct | null>(null);
 
   useEffect(() => {
@@ -97,7 +105,7 @@ const Product = () => {
             {/* whishlist button  */}
             <button
               className="w-full flex border  justify-center items-center gap-4  md:w-auto px-8 py-3 font-semibold rounded-sm  transition cursor-pointer hover:bg-gray-100"
-              onClick={addToWishlist}
+              onClick={() => addToWishlist(product)}
             >
               <Heart className="text-2xl" /> WISHLIST
             </button>

@@ -1,18 +1,25 @@
 import { ToastContainer, toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
-import { useState } from "react";
 import type { IProduct } from "../../components/productCard/ProductCard";
+import { useBag } from "../../context/BagContext";
 
 function WishList() {
-  const [wishlistItems, setWishlistItems] = useState<IProduct[]>([]);
+  const { wishlistItems, setWishlistItems } = useBag();
   const handleMoveToBag = (item: IProduct) => {
     toast.success("Added to Cart");
-    setWishlistItems((prev) => prev.filter((i) => i.id !== item.id));
+    const updatedWishlist = wishlistItems.filter((i) => i.id !== item.id);
+    setWishlistItems(updatedWishlist);
+  };
+
+  const handleRemoveFromWishlist = (itemId: number) => {
+    const updatedWishlist = wishlistItems.filter((i) => i.id !== itemId);
+    setWishlistItems(updatedWishlist);
+    toast.success("Removed from Wishlist");
   };
 
   return (
-    <div className="  border h-screen mx-auto ">
+    <div className=" h-screen  container mx-auto  mt-8 px-4 py-8">
       <ToastContainer autoClose={2000} />
       {wishlistItems.length === 0 ? (
         <div className="col-span-full flex flex-col items-center justify-center h-[70vh] text-center px-4">
@@ -33,29 +40,31 @@ function WishList() {
       ) : (
         <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
           {wishlistItems.map((item) => (
-            <div
-              key={item.id}
-              className="border rounded-lg bg-white shadow-sm flex flex-col"
-            >
-              <div className="relative aspect-[4/3]">
-                <div className="w-full h-48 overflow-hidden rounded-md">
+            <div key={item.id} className="border rounded-lg  shadow-sm ">
+              <div className="relative aspect-[4/3] mt-4">
+                <div className="w-full h-48  overflow-hidden rounded-md">
                   <img
                     src={item?.images?.[0] || "https://via.placeholder.com/200"}
                     alt={item?.title || "Product Image"}
                     className="w-full h-full object-contain "
                   />
                 </div>
-                <button className="absolute top-2 right-2 text-gray-600 bg-white border rounded-full w-6 h-6 text-sm">
+                <button
+                  className="absolute top-2 right-2 text-gray-600 bg-white border rounded-full w-6 h-6 text-sm cursor-pointer"
+                  onClick={() => handleRemoveFromWishlist(item?.id)}
+                >
                   ×
                 </button>
               </div>
-              <div className="p-3 flex flex-col flex-1">
-                <h2 className="text-sm text-gray-700 truncate">{item.title}</h2>
+              <div className="p-3 flex flex-col flex-1 ">
+                <h2 className="text-sm text-gray-700 truncate font-medium">
+                  {item.title}
+                </h2>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-sm font-bold text-blue-900">
                     Rs.{item.price}
                   </span>
-                  <span className="text-xs line-through text-gray-500">
+                  <span className="text-xs line-through text-muted-foreground">
                     Rs.2222
                   </span>
                   <span className="text-xs text-orange-500 font-semibold">
@@ -65,7 +74,7 @@ function WishList() {
               </div>
               <button
                 onClick={() => handleMoveToBag(item)}
-                className="w-full mt-auto border-t text-sm text-pink-600 font-bold py-3 hover:bg-pink-50 transition"
+                className="w-full mt-auto border-t text-sm text-pink-600 font-bold py-3 hover:bg-pink-50 transition cursor-pointer"
               >
                 Move to Bag
               </button>

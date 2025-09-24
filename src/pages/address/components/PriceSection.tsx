@@ -54,9 +54,9 @@ function PriceSection() {
 
       {/* PRICE DETAILS */}
       <div className="border-t border-gray-200 pt-4">
-        <h2 className="font-semibold text-gray-700 uppercase text-xs mb-2">
-          Price Details ( {bagItems.length} Item )
-        </h2>
+        <h3 className="text-sm font-bold text-gray-800 mb-3">
+          PRICE DETAILS ({bagItems.length}) Item
+        </h3>
         <div className="space-y-1">
           <div className="flex justify-between">
             <span>Total MRP</span>

@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import React from "react";
 import axios from "../api/apiconfig";
+import type { IAddress } from "../type/type";
 
 interface IUserResponse {
   id: string;
@@ -11,6 +12,8 @@ interface IUserResponse {
 interface IContext {
   user: IUserResponse | null;
   setUser: (user: IUserResponse | null) => void;
+  address: IAddress[];
+  setAddress: (address: IAddress[]) => void;
 }
 
 const authContext = createContext<IContext | undefined>(undefined);
@@ -21,6 +24,7 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [user, setUser] = useState<IUserResponse | null>(null);
+  const [address, setAddress] = useState<IAddress[]>([]);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -34,6 +38,8 @@ export const AuthContextProvider = ({
   const value = {
     user,
     setUser,
+    setAddress,
+    address,
   };
 
   return <authContext.Provider value={value}>{children}</authContext.Provider>;

@@ -21,6 +21,8 @@ interface IBagContext {
     totalAmount: number;
     shippingFee: number;
   }) => void;
+  wishlistItems: IProduct[];
+  setWishlistItems: (items: IProduct[]) => void;
 }
 
 const BagContext = createContext<IBagContext | null>(null);
@@ -32,6 +34,7 @@ export const BagContextProvider = ({
 }) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [bagItems, setBagItems] = useState<any[]>([]);
+  const [wishlistItems, setWishlistItems] = useState<IProduct[]>([]);
   const { data } = usefetchProducts();
   const [priceDetails, setPriceDetails] = useState({
     totalPrice: 0,
@@ -43,6 +46,7 @@ export const BagContextProvider = ({
 
   useEffect(() => {
     if (data) {
+      console.log("Products data from context:", data.data);
       setProducts(data.data);
     }
   }, [data]);
@@ -54,6 +58,8 @@ export const BagContextProvider = ({
     setProducts,
     priceDetails,
     setPriceDetails,
+    wishlistItems,
+    setWishlistItems,
   };
   return <BagContext.Provider value={value}>{children}</BagContext.Provider>;
 };
