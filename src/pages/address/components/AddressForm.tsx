@@ -9,22 +9,22 @@ import { useForm } from "react-hook-form";
 import { useAddNewAddress } from "../../../hooks/query";
 import type { IAddress } from "../../../type/type";
 import { useState } from "react";
-import handleSuccess from "../../../utils/successHandler";
+import LoadingDialog from "../../../components/loadingDialog/LoadingDialog";
 
 function AddressForm() {
   const { register, reset, handleSubmit } = useForm<IAddress>();
   const [open, setOpen] = useState<boolean>(false);
-  const { mutate: addNewAddress } = useAddNewAddress();
+  const { mutate: addNewAddress, isPending } = useAddNewAddress();
 
   const onsubmit = (data: IAddress) => {
     addNewAddress(data, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         setOpen(false);
         reset();
-        handleSuccess(res.message);
       },
     });
   };
+  isPending && <LoadingDialog open={isPending} />;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -1,17 +1,14 @@
+import LoadingDialog from "../../../components/loadingDialog/LoadingDialog";
 import { useAuth } from "../../../context/AuthContext";
 import { useRemoveAddress } from "../../../hooks/query";
-import handleSuccess from "../../../utils/successHandler";
 import AddressForm from "./AddressForm";
+import { Button } from "../../../components/ui/button";
 
 function AddressSection() {
   const { address } = useAuth();
-  const { mutate: removeAddress } = useRemoveAddress();
+  const { mutate: removeAddress, isPending } = useRemoveAddress();
   const handleRemoveAddress = (id: string) => {
-    removeAddress(id, {
-      onSuccess: (res) => {
-        handleSuccess(res.message);
-      },
-    });
+    removeAddress(id);
   };
   return (
     <div className="w-full lg:w-2/5 bg-white p-4 rounded shadow">
@@ -25,6 +22,7 @@ function AddressSection() {
           </p>
         </div>
         <AddressForm />
+        <LoadingDialog open={isPending} />
       </div>
 
       <div>
@@ -63,15 +61,16 @@ function AddressSection() {
                 </p>
 
                 <div className="flex gap-3 mt-4">
-                  <button
-                    className="border border-gray-500 px-4 py-1 rounded text-sm font-medium hover:bg-gray-100 "
+                  <Button
+                    variant="outline"
+                    className="cursor-pointer  "
                     onClick={() => handleRemoveAddress(data._id)}
                   >
                     REMOVE
-                  </button>
-                  <button className="border border-gray-500 px-4 py-1 rounded text-sm font-medium hover:bg-gray-100">
+                  </Button>
+                  <Button variant="outline" className="cursor-pointer">
                     EDIT
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

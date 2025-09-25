@@ -48,9 +48,9 @@ export interface ILoginResponse {
   token?: string;
 }
 
-export interface IAddressResponse {
-  user: IUser;
-}
+// export interface IAddressResponse {
+//   user: IUser;
+// }
 
 export interface IProductResponse {
   products: IProduct[];

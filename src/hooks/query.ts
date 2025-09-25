@@ -5,7 +5,6 @@ import type {
   IApiResponse,
   IErrorResponse,
   ILoginResponse,
-  IAddressResponse,
 } from "../type/type";
 import handleError from "../utils/errorHandler";
 import handleSuccess from "../utils/successHandler";
@@ -59,20 +58,21 @@ export const usefetchProducts = () => {
 };
 
 export const useAddNewAddress = () => {
-  const { setAddress } = useAuth();
+  const { setAddress, address } = useAuth();
   return useMutation({
     mutationKey: ["addNewAddress"],
     mutationFn: async (data: IAddress) => {
-      const res = await axios.post<IApiResponse<IAddressResponse>>(
-        "/address",
-        data
-      );
+      const res = await axios.post<IApiResponse<IAddress>>("/address", data);
       return res.data;
     },
-    onSuccess: (response: IApiResponse<IAddressResponse>) => {
-      const updateAddress = response.data.user.address;
-      setAddress(updateAddress || []);
+    onSuccess: (response: IApiResponse<IAddress>) => {
+      const updateAddress = response.data;
+      setAddress([...address, updateAddress]);
       handleSuccess(response.message);
+    },
+    onError: (error: IErrorResponse) => {
+      console.error("Hook onError called:", error);
+      handleError(error);
     },
   });
 };
@@ -82,17 +82,17 @@ export const useRemoveAddress = () => {
   return useMutation({
     mutationKey: ["removeAddress"],
     mutationFn: async (id: string) => {
-      const res = await axios.delete<IApiResponse<IAddressResponse>>(
-        `/address/${id}`
-      );
+      const res = await axios.delete<IApiResponse<IAddress>>(`/address/${id}`);
       return res.data;
     },
-    onSuccess: (response: IApiResponse<IAddressResponse>, variables) => {
-      const updateAddress = address.filter(
-        (addr) => addr._id !== variables // variables is the id parameter passed to mutationFn
-      );
+    onSuccess: (response: IApiResponse<IAddress>, id: string) => {
+      const updateAddress = address.filter((addr) => addr._id !== id);
       setAddress(updateAddress);
       handleSuccess(response.message);
+    },
+    onError: (error: IErrorResponse) => {
+      console.error("Remove address failed:", error);
+      handleError(error);
     },
   });
 };
