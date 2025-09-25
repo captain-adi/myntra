@@ -3,6 +3,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useRemoveAddress } from "../../../hooks/query";
 import AddressForm from "./AddressForm";
 import { Button } from "../../../components/ui/button";
+import AddressEditForm from "./AddressEditForm";
 
 function AddressSection() {
   const { address } = useAuth();
@@ -28,7 +29,7 @@ function AddressSection() {
       <div>
         {address.map((data) => (
           <div key={data._id} className="">
-            <div className="p-4 space-y-4 text-sm">
+            <div className="py-4 space-y-4 text-sm">
               {/* Address Card */}
               <div className="border border-gray-200 rounded-lg p-4 shadow-sm">
                 <div className="flex items-center justify-between">
@@ -63,14 +64,12 @@ function AddressSection() {
                 <div className="flex gap-3 mt-4">
                   <Button
                     variant="outline"
-                    className="cursor-pointer  "
+                    className="cursor-pointer font-bold "
                     onClick={() => handleRemoveAddress(data._id)}
                   >
                     REMOVE
                   </Button>
-                  <Button variant="outline" className="cursor-pointer">
-                    EDIT
-                  </Button>
+                  <AddressEditForm addressData={data} />
                 </div>
               </div>
             </div>

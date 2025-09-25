@@ -96,3 +96,28 @@ export const useRemoveAddress = () => {
     },
   });
 };
+
+export const useUpdateAddress = () => {
+  const { setAddress, address } = useAuth();
+  return useMutation({
+    mutationKey: ["updateAddress"],
+    mutationFn: async (data: { id: string; addressData: IAddress }) => {
+      const res = await axios.put<IApiResponse<IAddress>>(
+        `/address/${data.id}`,
+        data.addressData
+      );
+      return res.data;
+    },
+    onSuccess: (response: IApiResponse<IAddress>) => {
+      handleSuccess(response.message);
+      const updatedAddress = response.data;
+      const updatedAddressList = address.map((addr) =>
+        addr._id === updatedAddress._id ? updatedAddress : addr
+      );
+      setAddress(updatedAddressList);
+    },
+    onError: (error: IErrorResponse) => {
+      handleError(error);
+    },
+  });
+};
