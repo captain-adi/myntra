@@ -44,7 +44,6 @@ function AddressEditForm({ addressData }: IAddressEditFormProps) {
       }
     );
   };
-  isPending && <LoadingDialog open={isPending} />;
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -57,6 +56,7 @@ function AddressEditForm({ addressData }: IAddressEditFormProps) {
         <DialogTitle className="uppercase text-lg font-semibold mb-4">
           Edit Address
         </DialogTitle>
+        <LoadingDialog open={isPending} />
         <form className="space-y-5" onSubmit={handleSubmit(onsubmit)}>
           {/* Full Name */}
           <div>

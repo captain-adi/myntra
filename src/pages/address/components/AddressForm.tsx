@@ -24,7 +24,6 @@ function AddressForm() {
       },
     });
   };
-  isPending && <LoadingDialog open={isPending} />;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -36,6 +35,7 @@ function AddressForm() {
         <DialogTitle className="uppercase text-lg font-semibold mb-4">
           Add New Address
         </DialogTitle>
+        <LoadingDialog open={isPending} />
         <form className="space-y-5" onSubmit={handleSubmit(onsubmit)}>
           {/* Full Name */}
           <div>
