@@ -4,7 +4,7 @@ import GooglePay from "./icons/GooglePay";
 import { useBag } from "../../context/BagContext";
 import Cash from "./icons/Cash";
 import { Button } from "../../components/ui/button";
-import { usePlaceOrder } from "../../hooks/query";
+// import { usePlaceOrder } from "../../hooks/query";
 interface IPaymentOptions {
   label: string;
   icon: React.ReactNode;
@@ -48,9 +48,10 @@ const paymentOptions: IPaymentOptions[] = [
 const Payment = () => {
   const { priceDetails } = useBag();
   const [selectedMode, setSelectedMode] = useState<string>("");
-  const { mutate: placeOrder } = usePlaceOrder();
+  // const { mutate: placeOrder } = usePlaceOrder();
   const handlePlaceOrder = () => {
-    placeOrder({ addressId: "", paymentMethod: selectedMode });
+    // placeOrder({ addressId: "", paymentMethod: selectedMode });
+    console.log("working fine");
   };
 
   // Find the selected payment option by value
@@ -158,7 +159,10 @@ const Payment = () => {
               </div>
             </div>
             {selectedMode && (
-              <Button className="w-full mt-6 bg-pink-600 hover:bg-pink-700 font-bold cursor-pointer">
+              <Button
+                className="w-full mt-6 bg-pink-600 hover:bg-pink-700 font-bold cursor-pointer"
+                onClick={handlePlaceOrder}
+              >
                 PLACE ORDER
               </Button>
             )}
