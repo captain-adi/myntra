@@ -3,43 +3,58 @@ import { Wallet, CreditCard, Landmark } from "lucide-react";
 import GooglePay from "./icons/GooglePay";
 import { useBag } from "../../context/BagContext";
 import Cash from "./icons/Cash";
+import { Button } from "../../components/ui/button";
+import { usePlaceOrder } from "../../hooks/query";
+interface IPaymentOptions {
+  label: string;
+  icon: React.ReactNode;
+  options: string[];
+  value: string;
+}
 
-const paymentOptions = [
+const paymentOptions: IPaymentOptions[] = [
   {
     label: "Cash On Delivery (Cash/UPI)",
     icon: <Cash />,
     options: ["Cash on Delivery (Cash/UPI)"],
+    value: "COD",
   },
   {
     label: "UPI (Pay via any App)",
     icon: <GooglePay />,
     options: ["Google Pay", "PhonePe", "Paytm"],
+    value: "UPI",
   },
   {
     label: "Credit/Debit Card",
     icon: <CreditCard />,
     options: ["Visa", "MasterCard", "RuPay"],
+    value: "CARD",
   },
   {
     label: "Wallets",
     icon: <Wallet />,
     options: ["Paytm Wallet", "Mobikwik", "PhonePe Wallet"],
+    value: "WALLET",
   },
   {
     label: "Net Banking",
     icon: <Landmark />,
     options: ["SBI", "HDFC", "ICICI"],
+    value: "NET_BANKING",
   },
 ];
 
 const Payment = () => {
   const { priceDetails } = useBag();
-  const [selectedMode, setSelectedMode] = useState(
-    "Cash On Delivery (Cash/UPI)"
-  );
+  const [selectedMode, setSelectedMode] = useState<string>("");
+  const { mutate: placeOrder } = usePlaceOrder();
+  const handlePlaceOrder = () => {
+    placeOrder({ addressId: "", paymentMethod: selectedMode });
+  };
 
-  // Now selectedMode is initialized, now i  can safely find the selected payment option
-  const selected = paymentOptions.find((item) => item.label === selectedMode);
+  // Find the selected payment option by value
+  const selected = paymentOptions.find((item) => item.value === selectedMode);
 
   return (
     <section>
@@ -71,9 +86,9 @@ const Payment = () => {
                 {paymentOptions.map((mode) => (
                   <div
                     key={mode.label}
-                    onClick={() => setSelectedMode(mode.label)}
+                    onClick={() => setSelectedMode(mode.value)}
                     className={`cursor-pointer p-4 text-sm border-b hover:bg-gray-100 transition ${
-                      selectedMode === mode.label
+                      selectedMode === mode.value
                         ? "bg-pink-50 font-semibold border-l-4 border-pink-500"
                         : ""
                     }`}
@@ -98,9 +113,11 @@ const Payment = () => {
                       className="flex items-center space-x-3 text-sm"
                     >
                       <input
+                        checked={selectedMode === selected.value}
+                        onChange={() => setSelectedMode(selected.value)}
                         type="radio"
                         name="paymentOption"
-                        className="accent-pink-500"
+                        className="accent-pink-500 cursor-pointer"
                       />
                       <span>{option}</span>
                     </label>
@@ -140,6 +157,11 @@ const Payment = () => {
                 <span>₹{priceDetails.totalAmount}</span>
               </div>
             </div>
+            {selectedMode && (
+              <Button className="w-full mt-6 bg-pink-600 hover:bg-pink-700 font-bold cursor-pointer">
+                PLACE ORDER
+              </Button>
+            )}
           </div>
         </div>
 

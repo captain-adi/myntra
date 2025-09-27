@@ -12,7 +12,7 @@ function BagDetails() {
   let platFormFee = 0;
 
   bagItems.map((items) => {
-    totalMRP += Math.floor(items.price);
+    totalMRP += Math.floor(items.price * items.quantity);
     totalDiscount += Math.floor(items.originalPrice - items.price);
   });
   let finalMRP = totalMRP + Number(donation);

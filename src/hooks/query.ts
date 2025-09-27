@@ -121,3 +121,13 @@ export const useUpdateAddress = () => {
     },
   });
 };
+
+export const usePlaceOrder = () => {
+  return useMutation({
+    mutationKey: ["placeOrder"],
+    mutationFn: async (data: { addressId: string; paymentMethod: string }) => {
+      const res = await axios.post<IApiResponse<null>>("/order", data);
+      return res.data;
+    },
+  });
+};

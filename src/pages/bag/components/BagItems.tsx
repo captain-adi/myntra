@@ -48,7 +48,10 @@ function BagItems({ bagItems, setBagItems }: IBagItemsProps) {
               <span className="delivery-details-days">
                 {date.getDate() + 3}
               </span>
-              <div>{product.quantity}</div>
+              <div className="bg-gray-300 w-fit px-2 py-0.5 text-xs mt-1  rounded-sm">
+                <span className="font-bold"> Qty : </span>
+                {product.quantity}
+              </div>
             </div>
           </div>
 
