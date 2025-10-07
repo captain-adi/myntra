@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import ProductCard, {
-  type IProduct,
-} from "../../components/productCard/ProductCard";
+import type { IProduct } from "../../type/type";
 import axios from "../../api/apiconfig";
 import ProductCardSkeleton from "../../components/productCard/ProductCardSkeleton";
 import handleError from "../../utils/errorHandler";
+import ProductCard from "../../components/productCard/ProductCard";
 
 function Category() {
   const { categoryname } = useParams();

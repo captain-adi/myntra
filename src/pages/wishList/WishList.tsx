@@ -1,9 +1,8 @@
 import { ToastContainer, toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
-import type { IProduct } from "../../components/productCard/ProductCard";
 import { useBag } from "../../context/BagContext";
-
+import type { IProduct } from "../../type/type";
 function WishList() {
   const { wishlistItems, setWishlistItems } = useBag();
   const handleMoveToBag = (item: IProduct) => {
