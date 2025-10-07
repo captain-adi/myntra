@@ -25,13 +25,41 @@ export interface IUser {
 }
 
 export interface IProduct {
-  _id: string;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
+  availability: string;
+  brand: string;
   category: string;
-  // Add more product fields as needed
+  description: string;
+  dimensions: string;
+  discountPercentage: number;
+  images: string[];
+  price: number;
+  productId: string;
+  quantity: number;
+  rating: number;
+  reviews: {
+    comment: string;
+    rating: number;
+    _id: string;
+    reviewerName: string;
+    reviewerEmail: string;
+    date: string;
+  }[];
+  size: string[];
+  _id: string;
+  warrantyInformation: string;
+  title: string;
+  slug: string;
+  thumbnail: string;
+  originalPrice: number;
+  tags: string[];
+  id: number;
+  availabilityStatus: string;
+  returnPolicy: string;
+  minimumOrderQuantity: number;
+  shippingInformation: string;
+  sku: string;
+  stock: number;
+  weight: number;
 }
 
 // Generic API Response - now you can use it with any data type
@@ -62,4 +90,15 @@ export interface IErrorResponse {
   success: boolean;
   message: string;
   statusCode: string;
+}
+
+export interface IBagItems {
+  product: IProduct;
+  quantity: number;
+  _id: string;
+}
+export interface IBagItemsResponse {
+  productId: string;
+  quantity: number;
+  _id: string;
 }

@@ -1,41 +1,5 @@
 import { IndianRupee } from "lucide-react";
-export interface IProduct {
-  availability: string;
-  brand: string;
-  category: string;
-  description: string;
-  dimensions: string;
-  discountPercentage: number;
-  images: string[];
-  price: number;
-  productId: string;
-  quantity: number;
-  rating: number;
-  reviews: {
-    comment: string;
-    rating: number;
-    _id: string;
-    reviewerName: string;
-    reviewerEmail: string;
-    date: string;
-  }[];
-  size: string[];
-  _id: string;
-  warrantyInformation: string;
-  title: string;
-  slug: string;
-  thumbnail: string;
-  originalPrice: number;
-  tags: string[];
-  id: number;
-  availabilityStatus: string;
-  returnPolicy: string;
-  minimumOrderQuantity: number;
-  shippingInformation: string;
-  sku: string;
-  stock: number;
-  weight: number;
-}
+import type { IProduct } from "../../type/type";
 
 function ProductCard({ product }: { product: IProduct }) {
   return (

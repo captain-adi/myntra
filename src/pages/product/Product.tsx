@@ -4,28 +4,18 @@ import { toast } from "react-toastify";
 import { Star } from "lucide-react";
 import { Heart, IndianRupee, Handbag } from "lucide-react";
 import ProductSkeleton from "../../components/skeletons/ProductSkeleton";
-import type { IProduct } from "../../components/productCard/ProductCard";
+import type { IProduct } from "../../type/type";
 import { useBag } from "../../context/BagContext";
+import { useAddToBag } from "../../hooks/query";
 
 const Product = () => {
-  const { bagItems, setBagItems, products, wishlistItems, setWishlistItems } =
-    useBag();
+  const { bagItems, products, wishlistItems, setWishlistItems } = useBag();
+  const [quantity, _] = useState<number>(1);
+  const { mutate: addToBag } = useAddToBag();
   const { id } = useParams();
   const addToCart = (product: IProduct) => {
-    toast.success("ADDED TO BAG");
-    const isInBag =
-      bagItems.filter((item) => item.id === product.id).length > 0;
-    if (isInBag) {
-      setBagItems(
-        bagItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
-    } else {
-      setBagItems([...bagItems, { ...product, quantity: 1 }]);
-    }
+    addToBag({ productId: product._id, quantity: quantity });
+    console.log("bag items", bagItems);
   };
   const addToWishlist = (product: IProduct) => {
     toast.success("ADDED TO WISHLIST");

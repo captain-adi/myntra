@@ -1,42 +1,51 @@
-import { Delete } from "lucide-react";
+import { Delete, Minus, Plus } from "lucide-react";
 import { toast } from "react-toastify";
-import type { IProduct } from "../../../components/productCard/ProductCard";
+import type { IBagItems } from "../../../type/type";
+import { useRemoveFromBag } from "../../../hooks/query";
+import LoadingDialog from "../../../components/loadingDialog/LoadingDialog";
+import { useState } from "react";
 
 interface IBagItemsProps {
-  bagItems: IProduct[];
-  setBagItems: (items: IProduct[]) => void;
+  bagItems: IBagItems[];
+  setBagItems: (items: IBagItems[]) => void;
 }
 
 function BagItems({ bagItems, setBagItems }: IBagItemsProps) {
   const date = new Date();
-
-  const handleRemoveFromBag = (id: number) => {
-    const updatedItems = bagItems.filter((item) => item.id !== id);
-    setBagItems(updatedItems);
-    toast.success("Item removed from bag");
+  const { mutate: RemoveFromBag, isPending } = useRemoveFromBag();
+  const [quantity, setQuantity] = useState<number>(1);
+  const handleRemoveFromBag = (id: string) => {
+    RemoveFromBag(id, {
+      onSuccess: () => {
+        const updatedItems = bagItems.filter((item) => item.product._id !== id);
+        setBagItems(updatedItems);
+        toast.success("Item removed from bag");
+      },
+    });
   };
+
   return (
     <>
-      {bagItems.map((product) => (
-        <div className="bag-item-container" key={product.id}>
+      {bagItems.map((obj) => (
+        <div className="bag-item-container" key={obj.product._id}>
           <div className="item-left-part  rounded-md shadow-sm p-3">
             <img
               className="bag-item-img h-full w-full  object-contain"
-              src={product.images[0]}
+              src={obj.product.images[0]}
               alt="Product"
             />
           </div>
-
+          {isPending && <LoadingDialog open={isPending} />}
           <div className="item-right-part">
-            <div className="company">{product.brand}</div>
-            <div className="item-name">{product.title}</div>
+            <div className="company">{obj.product.brand}</div>
+            <div className="item-name">{obj.product.title}</div>
             <div className="price-container flex gap-3">
-              <span className="current-price">Rs {product.price}</span>
+              <span className="current-price">Rs {obj.product.price}</span>
               <span className="original-price line-through">
-                Rs{product.originalPrice}
+                Rs{obj.product.originalPrice}
               </span>
               <span className="discount-percentage">
-                {product.discountPercentage}%
+                {obj.product.discountPercentage}%
               </span>
             </div>
             <div className="return-period">
@@ -48,15 +57,25 @@ function BagItems({ bagItems, setBagItems }: IBagItemsProps) {
               <span className="delivery-details-days">
                 {date.getDate() + 3}
               </span>
-              <div className="bg-gray-300 w-fit px-2 py-0.5 text-xs mt-1  rounded-sm">
-                <span className="font-bold"> Qty : </span>
-                {product.quantity}
+              <div className="bg-gray-300 w-fit px-2 py-0.5 text-xs mt-1  rounded-sm flex items-center gap-1">
+                <Minus
+                  onClick={() => setQuantity(quantity - 1)}
+                  className="cursor-pointer"
+                  size={12}
+                />
+
+                {obj.quantity}
+                <Plus
+                  onClick={() => setQuantity(quantity + 1)}
+                  size={12}
+                  className="cursor-pointer"
+                />
               </div>
             </div>
           </div>
 
           <div className="remove-from-cart">
-            <Delete onClick={() => handleRemoveFromBag(product.id)} />
+            <Delete onClick={() => handleRemoveFromBag(obj.product._id)} />
           </div>
         </div>
       ))}
