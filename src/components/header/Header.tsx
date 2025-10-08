@@ -21,7 +21,7 @@ function Header() {
           {menuOpen ? <X cursor={"pointer"} /> : <Menu cursor={"pointer"} />}
         </button>
         {/* Logo */}
-        <Link to="/" className="flex items-center">
+        <Link to="/" className="">
           <img
             src="/Image/myntra_logo.webp"
             alt="Myntra Logo"
@@ -30,7 +30,7 @@ function Header() {
         </Link>
 
         {/* Desktop Navbar */}
-        <nav className=" p-5  text-xs gap-5 font-bold  hidden  sm:block">
+        <nav className="hidden sm:flex gap-5 text-xs  font-bold">
           <Link to="#">MEN</Link>
           <Link to="#">WOMEN</Link>
           <Link to="#">KIDS</Link>
@@ -55,20 +55,20 @@ function Header() {
             <ProfileDropdown />
           ) : (
             <Link to={"/login"} className="flex flex-col items-center">
-              <User className="text-2xl" />
+              <User className="w-4 h-4 md:w-6 md:h-6  text-gray-600" />
               <span className="text-[0.7rem]">Login</span>
             </Link>
           )}
 
           <Link to={"/wishlist"} className="flex flex-col items-center">
-            <Heart className="text-2xl" />
+            <Heart className="w-4 h-4 md:w-6 md:h-6  text-gray-600" />
             <span className="text-[0.7rem]">Wishlist</span>
           </Link>
           <Link
             to="/checkout/bag"
             className="flex flex-col items-center relative"
           >
-            <Handbag className="text-2xl" />
+            <Handbag className="w-4 h-4 md:w-6 md:h-6  text-gray-600" />
             <span className="absolute -top-2 left-3.5 rounded-full bg-red-500 p-0.5 px-2 text-sm text-white">
               {bagItems.length}
             </span>

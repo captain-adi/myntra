@@ -14,6 +14,8 @@ interface IContext {
   setUser: (user: IUserResponse | null) => void;
   address: IAddress[];
   setAddress: (address: IAddress[]) => void;
+  loading?: boolean;
+  setLoading?: (loading: boolean) => void;
 }
 
 const authContext = createContext<IContext | undefined>(undefined);
@@ -25,13 +27,21 @@ export const AuthContextProvider = ({
 }) => {
   const [user, setUser] = useState<IUserResponse | null>(null);
   const [address, setAddress] = useState<IAddress[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkLogin = async () => {
-      const res = await axios.get("/auth/is-auth");
-      setUser(res.data.data.user);
-      setAddress(res.data.data.user.address || []);
-      console.log("is-auth res:", res.data);
+      try {
+        const res = await axios.get("/auth/is-auth");
+        setUser(res.data.data.user);
+        setAddress(res.data.data.user.address || []);
+        console.log("is-auth res:", res.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     checkLogin();
   }, []);
@@ -41,6 +51,8 @@ export const AuthContextProvider = ({
     setUser,
     setAddress,
     address,
+    loading,
+    setLoading,
   };
 
   return <authContext.Provider value={value}>{children}</authContext.Provider>;

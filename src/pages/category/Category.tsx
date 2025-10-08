@@ -28,7 +28,7 @@ function Category() {
   }, []);
 
   return (
-    <div className="flex  container mx-auto flex-wrap  gap-8 mt-10">
+    <div className="flex  container mx-auto flex-wrap  gap-8 mt-10 mb-10 justify-center ">
       {categoryItems.length > 0
         ? categoryItems.map((product) => (
             <Link
