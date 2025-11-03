@@ -10,7 +10,7 @@ import { useAddToBag } from "../../hooks/query";
 
 const Product = () => {
   const { bagItems, products, wishlistItems, setWishlistItems } = useBag();
-  const [quantity, _] = useState<number>(1);
+  const [quantity] = useState<number>(1);
   const { mutate: addToBag } = useAddToBag();
   const { id } = useParams();
   const addToCart = (product: IProduct) => {
@@ -32,7 +32,7 @@ const Product = () => {
       (product: IProduct) => product._id === id
     );
     setProduct(filteredData[0]);
-  }, [products]);
+  }, [id, products]);
 
   if (!product) {
     return <ProductSkeleton />;

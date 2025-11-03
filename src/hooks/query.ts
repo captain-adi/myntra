@@ -50,7 +50,7 @@ export const useLogout = () => {
   });
 };
 
-export const usefetchProducts = () => {
+export const useFetchProducts = () => {
   return useQuery({
     queryKey: ["products"],
     queryFn: async (): Promise<IApiResponse<IProduct[]>> => {
@@ -170,7 +170,7 @@ export const useAddToBag = () => {
       return res.data;
     },
     onSuccess: (response) => {
-      let quantity = response.data.quantity;
+      const quantity = response.data.quantity;
       const product = products.find(
         (items) => items._id === response.data.productId
       );

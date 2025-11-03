@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { IProduct } from "../type/type";
-import { usefetchProducts } from "../hooks/query";
+import { useFetchProducts } from "../hooks/query";
 import type { IBagItems, IBagItemsResponse } from "../type/type";
 import axios from "../api/apiconfig";
 
@@ -38,7 +38,7 @@ export const BagContextProvider = ({
   const [products, setProducts] = useState<IProduct[]>([]);
   const [bagItems, setBagItems] = useState<IBagItems[]>([]);
   const [wishlistItems, setWishlistItems] = useState<IProduct[]>([]);
-  const { data } = usefetchProducts();
+  const { data } = useFetchProducts();
   const [priceDetails, setPriceDetails] = useState({
     totalPrice: 0,
     discount: 0,
