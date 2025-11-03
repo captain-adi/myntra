@@ -7,15 +7,15 @@ import ProductSkeleton from "../../components/skeletons/ProductSkeleton";
 import type { IProduct } from "../../type/type";
 import { useBag } from "../../context/BagContext";
 import { useAddToBag } from "../../hooks/query";
+import LoadingDialog from "../../components/loadingDialog/LoadingDialog";
 
 const Product = () => {
-  const { bagItems, products, wishlistItems, setWishlistItems } = useBag();
+  const { products, wishlistItems, setWishlistItems } = useBag();
   const [quantity] = useState<number>(1);
-  const { mutate: addToBag } = useAddToBag();
+  const { mutate: addToBag, isPending } = useAddToBag();
   const { id } = useParams();
   const addToCart = (product: IProduct) => {
     addToBag({ productId: product._id, quantity: quantity });
-    console.log("bag items", bagItems);
   };
   const addToWishlist = (product: IProduct) => {
     toast.success("ADDED TO WISHLIST");
@@ -40,6 +40,7 @@ const Product = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <LoadingDialog open={isPending} />
       <div className="grid md:grid-cols-2 gap-10">
         {/* Image Section */}
         <div className="space-y-4">
