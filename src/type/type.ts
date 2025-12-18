@@ -92,13 +92,21 @@ export interface IErrorResponse {
   statusCode: string;
 }
 
-export interface IBagItems {
-  product: IProduct;
+export interface IBagItemBase {
   quantity: number;
   _id: string;
 }
-export interface IBagItemsResponse {
+export interface IBagItems extends IBagItemBase {
+  product: IProduct;
+}
+export interface IBagItemsResponse extends IBagItemBase {
   productId: string;
-  quantity: number;
-  _id: string;
+}
+
+export interface IPriceDetails {
+  totalPrice: number;
+  discount: number;
+  platformFee: number;
+  totalAmount: number;
+  shippingFee: number;
 }

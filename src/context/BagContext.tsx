@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { IProduct } from "../type/type";
+import type { IPriceDetails, IProduct } from "../type/type";
 import { useFetchProducts } from "../hooks/query";
 import type { IBagItems, IBagItemsResponse } from "../type/type";
 import axios from "../api/apiconfig";
+import { useAuth } from "./AuthContext";
 
 interface IBagContext {
   bagItems: IBagItems[];
@@ -10,20 +11,8 @@ interface IBagContext {
   products: IProduct[];
   setProducts: (products: IProduct[]) => void;
   convertBagItems: (bagItemsResponse: IBagItemsResponse[]) => IBagItems[];
-  priceDetails: {
-    totalPrice: number;
-    discount: number;
-    platformFee: number;
-    totalAmount: number;
-    shippingFee: number;
-  };
-  setPriceDetails: (details: {
-    totalPrice: number;
-    discount: number;
-    platformFee: number;
-    totalAmount: number;
-    shippingFee: number;
-  }) => void;
+  priceDetails: IPriceDetails;
+  setPriceDetails: (details: IPriceDetails) => void;
   wishlistItems: IProduct[];
   setWishlistItems: (items: IProduct[]) => void;
 }
@@ -35,6 +24,7 @@ export const BagContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { user } = useAuth();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [bagItems, setBagItems] = useState<IBagItems[]>([]);
   const [wishlistItems, setWishlistItems] = useState<IProduct[]>([]);
@@ -67,7 +57,7 @@ export const BagContextProvider = ({
     if (products.length > 0) {
       fetchBagItems();
     }
-  }, [data, products]);
+  }, [data, products, user]);
 
   // Helper function to convert API response to IBagItems
   const convertBagItems = (
