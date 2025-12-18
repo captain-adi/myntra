@@ -37,7 +37,7 @@ function Login() {
               {...register("email")}
               type="email"
               placeholder="📧 Email"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 transition bg-white/60"
+              className="login-input"
             />
           </div>
           <div>
@@ -46,7 +46,7 @@ function Login() {
               {...register("password")}
               type="password"
               placeholder="🔒 Password"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 transition bg-white/60"
+              className="login-input"
             />
           </div>
 
