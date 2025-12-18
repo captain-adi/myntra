@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 function Carousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -11,13 +11,13 @@ function Carousel() {
     "https://assets.myntassets.com/f_webp,w_980,c_limit,fl_progressive,dpr_2.0/assets/images/2021/6/9/64365564-c127-409f-b021-39287ef57d041623250209213-DK_OmniStyles.jpg",
   ];
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-  };
+  }, [slides.length]);
 
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  };
+  }, [slides.length]);
 
   // Auto slide every 3 seconds
   useEffect(() => {
@@ -25,7 +25,7 @@ function Carousel() {
       nextSlide();
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextSlide]);
 
   return (
     <div className="relative w-full  overflow-hidden">
