@@ -63,7 +63,7 @@ const Footer = () => {
 
       <hr className="border-gray-300" />
 
-      <div className="flex justify-between items-center p-4">
+      <div className="flex justify-between items-center p-4 container mx-auto">
         <p className="text-gray-500">
           © 2023 www.myntra.com. All rights reserved.
         </p>
