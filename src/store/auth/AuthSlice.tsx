@@ -6,7 +6,7 @@ import type { IApiResponse, ILoginResponse } from "../../type/type";
 const initialState: IAuthState = {
   user: null,
   address: [],
-  loading: false,
+  loading: true, // Start with true to prevent redirect before auth check completes
   error: null,
 };
 
@@ -40,6 +40,7 @@ const AuthSlice = createSlice({
       },
     );
     builder.addCase(login.rejected, (state, action) => {
+      state.user = null;
       state.loading = false;
       state.error = action.payload || "Failed to check login";
     });

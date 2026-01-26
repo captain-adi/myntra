@@ -11,11 +11,16 @@ import ProtectedRoute from "../components/protectedRoute/ProtectedRoute";
 import BagLayout from "../pages/bag/Index";
 import Address from "../pages/address/Address";
 import Payment from "../pages/payment/Payment";
+import AuthProvider from "../components/authProvider/AuthProvider";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    ),
     children: [
       { path: "/", element: <Home /> },
       { path: "/login", element: <Login /> },
@@ -34,7 +39,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/checkout",
-    element: <BagLayout />,
+    element: (
+      <AuthProvider>
+        <BagLayout />
+      </AuthProvider>
+    ),
     children: [
       {
         path: "/checkout/bag",
