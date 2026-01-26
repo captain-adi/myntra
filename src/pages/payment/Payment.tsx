@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Wallet, CreditCard, Landmark } from "lucide-react";
 import GooglePay from "./icons/GooglePay";
-import { useBag } from "../../context/BagContext";
 import Cash from "./icons/Cash";
 import { Button } from "../../components/ui/button";
+import { useAppSelector } from "../../hooks/hook";
 // import { usePlaceOrder } from "../../hooks/query";
 interface IPaymentOptions {
   label: string;
@@ -46,7 +46,7 @@ const paymentOptions: IPaymentOptions[] = [
 ];
 
 const Payment = () => {
-  const { priceDetails } = useBag();
+  const { priceDetails } = useAppSelector((state) => state.bag);
   const [selectedMode, setSelectedMode] = useState<string>("");
   // const { mutate: placeOrder } = usePlaceOrder();
   const handlePlaceOrder = () => {

@@ -1,19 +1,22 @@
 import { ToastContainer, toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react";
-import { useBag } from "../../context/BagContext";
 import type { IProduct } from "../../type/type";
+import { useAppDispatch, useAppSelector } from "../../hooks/hook";
+import { setWishlistItems } from "../../store/bag/BagSlice";
 function WishList() {
-  const { wishlistItems, setWishlistItems } = useBag();
+  // const { wishlistItems, setWishlistItems } = useBag();
+  const { wishlistItems } = useAppSelector((state) => state.bag);
+  const dispatch = useAppDispatch();
   const handleMoveToBag = (item: IProduct) => {
     toast.success("Added to Cart");
     const updatedWishlist = wishlistItems.filter((i) => i.id !== item.id);
-    setWishlistItems(updatedWishlist);
+    dispatch(setWishlistItems(updatedWishlist));
   };
 
   const handleRemoveFromWishlist = (itemId: number) => {
     const updatedWishlist = wishlistItems.filter((i) => i.id !== itemId);
-    setWishlistItems(updatedWishlist);
+    dispatch(setWishlistItems(updatedWishlist));
     toast.success("Removed from Wishlist");
   };
 

@@ -4,13 +4,15 @@ import type { IBagItems } from "../../../type/type";
 import { useRemoveFromBag } from "../../../hooks/query";
 import LoadingDialog from "../../../components/loadingDialog/LoadingDialog";
 import { useState } from "react";
+import { setBagItems } from "../../../store/bag/BagSlice";
+import { useAppDispatch } from "../../../hooks/hook";
 
 interface IBagItemsProps {
   bagItems: IBagItems[];
-  setBagItems: (items: IBagItems[]) => void;
 }
 
-function BagItems({ bagItems, setBagItems }: IBagItemsProps) {
+function BagItems({ bagItems }: IBagItemsProps) {
+  const dispatch = useAppDispatch();
   const date = new Date();
   const { mutate: RemoveFromBag, isPending } = useRemoveFromBag();
   const [quantity, setQuantity] = useState<number>(1);
@@ -18,7 +20,7 @@ function BagItems({ bagItems, setBagItems }: IBagItemsProps) {
     RemoveFromBag(id, {
       onSuccess: () => {
         const updatedItems = bagItems.filter((item) => item.product._id !== id);
-        setBagItems(updatedItems);
+        dispatch(setBagItems(updatedItems));
         toast.success("Item removed from bag");
       },
     });

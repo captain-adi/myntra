@@ -5,12 +5,14 @@ import { Star } from "lucide-react";
 import { Heart, IndianRupee, Handbag } from "lucide-react";
 import ProductSkeleton from "../../components/skeletons/ProductSkeleton";
 import type { IProduct } from "../../type/type";
-import { useBag } from "../../context/BagContext";
 import { useAddToBag } from "../../hooks/query";
 import LoadingDialog from "../../components/loadingDialog/LoadingDialog";
+import { useAppDispatch, useAppSelector } from "../../hooks/hook";
+import { setWishlistItems } from "../../store/bag/BagSlice";
 
 const Product = () => {
-  const { products, wishlistItems, setWishlistItems } = useBag();
+  const dispatch = useAppDispatch();
+  const { products, wishlistItems } = useAppSelector((state) => state.bag);
   const [quantity] = useState<number>(1);
   const { mutate: addToBag, isPending } = useAddToBag();
   const { id } = useParams();
@@ -22,14 +24,14 @@ const Product = () => {
     const isInWishlist =
       wishlistItems.filter((item) => item.id === product.id).length > 0;
     if (!isInWishlist) {
-      setWishlistItems([...wishlistItems, product]);
+      dispatch(setWishlistItems([...wishlistItems, product]));
     }
   };
   const [product, setProduct] = useState<IProduct | null>(null);
 
   useEffect(() => {
     const filteredData = products.filter(
-      (product: IProduct) => product._id === id
+      (product: IProduct) => product._id === id,
     );
     setProduct(filteredData[0]);
   }, [id, products]);

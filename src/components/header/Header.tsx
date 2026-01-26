@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Search, Heart, Handbag, User, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import ProfileDropdown from "../profileDropdown/ProfileDropdown";
-import { useBag } from "../../context/BagContext";
+import { useAppSelector } from "../../hooks/hook";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user } = useAuth();
-  const { bagItems } = useBag();
+  const { user } = useAppSelector((state) => state.auth);
+  const { bagItems } = useAppSelector((state) => state.bag);
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50 ">
@@ -69,9 +68,11 @@ function Header() {
             className="flex flex-col items-center relative"
           >
             <Handbag className="w-4 h-4 md:w-6 md:h-6  text-gray-600" />
-            <span className="absolute -top-2 left-3.5 rounded-full bg-red-500 p-0.5 px-2 text-sm text-white">
-              {bagItems.length}
-            </span>
+            {bagItems.length > 0 && (
+              <span className="absolute -top-2 left-3.5 rounded-full bg-red-500 p-0.5 px-2 text-sm text-white">
+                {bagItems.length}
+              </span>
+            )}
             <span className="text-[0.7rem]">Bag</span>
           </Link>
         </div>

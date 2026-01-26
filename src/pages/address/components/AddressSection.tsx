@@ -1,12 +1,12 @@
 import LoadingDialog from "../../../components/loadingDialog/LoadingDialog";
-import { useAuth } from "../../../context/AuthContext";
 import { useRemoveAddress } from "../../../hooks/query";
 import AddressForm from "./AddressForm";
 import { Button } from "../../../components/ui/button";
 import AddressEditForm from "./AddressEditForm";
+import { useAppSelector } from "../../../hooks/hook";
 
 function AddressSection() {
-  const { address } = useAuth();
+  const { address } = useAppSelector((state) => state.auth);
   const { mutate: removeAddress, isPending } = useRemoveAddress();
   const handleRemoveAddress = (id: string) => {
     removeAddress(id);

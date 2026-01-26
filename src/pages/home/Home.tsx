@@ -1,10 +1,10 @@
 import Carousel from "../../components/carousel.tsx/Carousel";
 import CategorySection from "../../components/categorySection/CategorySection";
 import Trending from "../../components/trending/Trending";
-import { useAuth } from "../../context/AuthContext";
+import { useAppSelector } from "../../hooks/hook";
 
 function Home() {
-  const { user } = useAuth();
+  const { user } = useAppSelector((state) => state.auth);
   console.log("user from Home is : ", user);
   return (
     <div>

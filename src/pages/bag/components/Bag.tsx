@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
 import BagItems from "./BagItems.js";
 import BagDetails from "./BagDetails.js";
-import { useBag } from "../../../context/BagContext.js";
+import { useAppSelector } from "../../../hooks/hook.js";
 
 function Bag() {
-  const { bagItems, setBagItems } = useBag();
+  const { bagItems } = useAppSelector((state) => state.bag);
 
   return (
     <div className="container mx-auto">
       {bagItems.length !== 0 ? (
         <main className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto p-4">
           <div className="w-full lg:w-2/3">
-            <BagItems bagItems={bagItems} setBagItems={setBagItems} />
+            <BagItems bagItems={bagItems} />
           </div>
           <div className="w-full lg:w-1/3">
             <BagDetails />

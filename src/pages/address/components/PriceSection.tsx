@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import { useBag } from "../../../context/BagContext";
 import { useEffect, useState } from "react";
+import { useAppSelector } from "../../../hooks/hook";
 
 function PriceSection() {
-  const { priceDetails } = useBag();
   const [deliveryDate, setDeliveryDate] = useState(new Date());
-  const { bagItems } = useBag();
+  const { priceDetails, bagItems } = useAppSelector((state) => state.bag);
   useEffect(() => {
     const newDate = new Date(deliveryDate);
     newDate.setDate(newDate.getDate() + 3);
@@ -55,7 +54,7 @@ function PriceSection() {
       {/* PRICE DETAILS */}
       <div className="border-t border-gray-200 pt-4">
         <h3 className="text-sm font-bold text-gray-800 mb-3">
-          PRICE DETAILS ({bagItems.length}) Item
+          PRICE DETAILS ({bagItems.length}) Items
         </h3>
         <div className="space-y-1">
           <div className="flex justify-between">
@@ -80,7 +79,7 @@ function PriceSection() {
               Shipping Fee
               <span className="text-pink-600 cursor-pointer">Know More</span>
             </span>
-            <span className="text-green-600">{priceDetails.shippingFee}</span>
+            <span className="text-green-600">₹{priceDetails.shippingFee}</span>
           </div>
           <p className="text-xs text-gray-400">Free shipping for you</p>
         </div>

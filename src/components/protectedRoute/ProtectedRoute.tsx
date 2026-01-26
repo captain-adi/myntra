@@ -1,11 +1,10 @@
 import React from "react";
-import { useAuth } from "../../context/AuthContext";
 import { Navigate } from "react-router-dom";
 import LoadingDialog from "../loadingDialog/LoadingDialog";
+import { useAppSelector } from "../../hooks/hook";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-
+  const { user, loading } = useAppSelector((state) => state.auth);
   if (loading) {
     return <LoadingDialog open={true} />;
   }

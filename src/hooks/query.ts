@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import axios from "../api/apiconfig";
 import type {
   IAddress,
@@ -10,20 +9,29 @@ import type {
 } from "../type/type";
 import handleError from "../utils/errorHandler";
 import handleSuccess from "../utils/successHandler";
-import { useAuth } from "../context/AuthContext";
 import type { IProduct } from "../type/type";
-import { useBag } from "../context/BagContext";
+import {
+  setUser as checkingLogin,
+  logout as checkingLogout,
+  setAddress,
+} from "../store/auth/AuthSlice";
+import { useAppDispatch, useAppSelector } from "./hook";
+import { setBagItems } from "../store/bag/BagSlice";
 
 export const useLogin = () => {
-  const { setUser } = useAuth();
+  const dispatch = useAppDispatch();
+
   return useMutation({
     mutationKey: ["login"],
     mutationFn: async (data: { email: string; password: string }) => {
       const res = await axios.post("/auth/login", data);
+      console.log("the whole response after login is : ", res.data);
       return res.data;
     },
     onSuccess: (response: IApiResponse<ILoginResponse>) => {
-      setUser(response.data.user);
+      dispatch(checkingLogin(response.data.user));
+      dispatch(setAddress(response.data.user.address || []));
+      dispatch(setBagItems(response.data.user.bagItems || []));
       handleSuccess(response.message);
     },
     onError: (error: IErrorResponse) => {
@@ -33,7 +41,7 @@ export const useLogin = () => {
 };
 
 export const useLogout = () => {
-  const { setUser } = useAuth();
+  const dispatch = useAppDispatch();
   return useMutation({
     mutationKey: ["logout"],
     mutationFn: async () => {
@@ -41,7 +49,7 @@ export const useLogout = () => {
       return res.data;
     },
     onSuccess: (response: IApiResponse<null>) => {
-      setUser(null);
+      dispatch(checkingLogout());
       handleSuccess(response.message);
     },
     onError: (error: IErrorResponse) => {
@@ -61,7 +69,8 @@ export const useFetchProducts = () => {
 };
 
 export const useAddNewAddress = () => {
-  const { setAddress, address } = useAuth();
+  const dispatch = useAppDispatch();
+  const address = useAppSelector((state) => state.auth.user?.address || []);
   return useMutation({
     mutationKey: ["addNewAddress"],
     mutationFn: async (data: IAddress) => {
@@ -70,7 +79,7 @@ export const useAddNewAddress = () => {
     },
     onSuccess: (response: IApiResponse<IAddress>) => {
       const updateAddress = response.data;
-      setAddress([...address, updateAddress]);
+      dispatch(setAddress([...address, updateAddress]));
       handleSuccess(response.message);
     },
     onError: (error: IErrorResponse) => {
@@ -81,7 +90,8 @@ export const useAddNewAddress = () => {
 };
 
 export const useRemoveAddress = () => {
-  const { setAddress, address } = useAuth();
+  const dispatch = useAppDispatch();
+  const address = useAppSelector((state) => state.auth.user?.address || []);
   return useMutation({
     mutationKey: ["removeAddress"],
     mutationFn: async (id: string) => {
@@ -90,7 +100,7 @@ export const useRemoveAddress = () => {
     },
     onSuccess: (response: IApiResponse<IAddress>, id: string) => {
       const updateAddress = address.filter((addr) => addr._id !== id);
-      setAddress(updateAddress);
+      dispatch(setAddress(updateAddress));
       handleSuccess(response.message);
     },
     onError: (error: IErrorResponse) => {
@@ -101,13 +111,14 @@ export const useRemoveAddress = () => {
 };
 
 export const useUpdateAddress = () => {
-  const { setAddress, address } = useAuth();
+  const dispatch = useAppDispatch();
+  const address = useAppSelector((state) => state.auth.user?.address || []);
   return useMutation({
     mutationKey: ["updateAddress"],
     mutationFn: async (data: { id: string; addressData: IAddress }) => {
       const res = await axios.put<IApiResponse<IAddress>>(
         `/address/${data.id}`,
-        data.addressData
+        data.addressData,
       );
       return res.data;
     },
@@ -115,9 +126,9 @@ export const useUpdateAddress = () => {
       handleSuccess(response.message);
       const updatedAddress = response.data;
       const updatedAddressList = address.map((addr) =>
-        addr._id === updatedAddress._id ? updatedAddress : addr
+        addr._id === updatedAddress._id ? updatedAddress : addr,
       );
-      setAddress(updatedAddressList);
+      dispatch(setAddress(updatedAddressList));
     },
     onError: (error: IErrorResponse) => {
       handleError(error);
@@ -135,68 +146,47 @@ export const usePlaceOrder = () => {
   });
 };
 
-// Hook to fetch and convert bag items from API
-export const useFetchBagItems = () => {
-  const { setBagItems, convertBagItems } = useBag();
-
-  const queryResult = useQuery({
-    queryKey: ["bagItems"],
-    queryFn: async (): Promise<IApiResponse<IBagItemsResponse[]>> => {
-      const res = await axios.get("/user/bag");
-      return res.data;
-    },
-  });
-
-  // Handle the conversion when data is available
-  useEffect(() => {
-    if (queryResult.data) {
-      const convertedBagItems = convertBagItems(queryResult.data.data);
-      setBagItems(convertedBagItems);
-    }
-  }, [queryResult.data, convertBagItems, setBagItems]);
-
-  return queryResult;
-};
-
 export const useAddToBag = () => {
-  const { bagItems, setBagItems, products } = useBag();
+  const dispatch = useAppDispatch();
+  const { bagItems, products } = useAppSelector((state) => state.bag);
   return useMutation({
     mutationKey: ["addToBag"],
     mutationFn: async (data: { productId: string; quantity: number }) => {
       const res = await axios.post<IApiResponse<IBagItemsResponse>>(
         "/user/bag",
-        data
+        data,
       );
       return res.data;
     },
     onSuccess: (response) => {
       const quantity = response.data.quantity;
       const product = products.find(
-        (items) => items._id === response.data.productId
+        (items) => items.productId === response.data.productId,
       );
       const existingItem = bagItems.find(
-        (item) => item.product._id === response.data.productId
+        (item) => item.product._id === response.data.productId,
       );
       if (existingItem) {
         // Increment quantity immutably
         const updated = bagItems.map((item) =>
           item.product._id === response.data.productId
             ? { ...item, quantity: response.data.quantity }
-            : item
+            : item,
         );
-        setBagItems(updated);
+        dispatch(setBagItems(updated));
         handleSuccess("Item quantity updated in bag");
-        return;
       }
       if (product) {
-        setBagItems([
-          ...bagItems,
-          {
-            product: product,
-            quantity: quantity,
-            _id: response.data._id,
-          },
-        ]);
+        dispatch(
+          setBagItems([
+            ...bagItems,
+            {
+              product: product,
+              quantity: quantity,
+              _id: response.data._id,
+            },
+          ]),
+        );
       }
       handleSuccess(response.message);
     },
@@ -208,20 +198,21 @@ export const useAddToBag = () => {
 };
 
 export const useRemoveFromBag = () => {
-  const { bagItems, setBagItems } = useBag();
+  const dispatch = useAppDispatch();
+  const { bagItems } = useAppSelector((state) => state.bag);
   return useMutation({
     mutationKey: ["removeFromBag"],
     mutationFn: async (id: string) => {
       const res = await axios.delete<IApiResponse<IBagItemsResponse>>(
-        `/user/bag/${id}`
+        `/user/bag/${id}`,
       );
       return res.data;
     },
     onSuccess: (response) => {
       const updatedBagItems = bagItems.filter(
-        (item) => item._id !== response.data._id
+        (item) => item._id !== response.data._id,
       );
-      setBagItems(updatedBagItems);
+      dispatch(setBagItems(updatedBagItems));
     },
     onError: (error: IErrorResponse) => {
       console.error("Remove from bag failed:", error);

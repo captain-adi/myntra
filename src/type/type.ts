@@ -22,6 +22,7 @@ export interface IUser {
   email: string;
   username: string;
   address?: IAddress[];
+  bagItems?: IBagItems[];
 }
 
 export interface IProduct {
@@ -63,7 +64,7 @@ export interface IProduct {
 }
 
 // Generic API Response - now you can use it with any data type
-export interface IApiResponse<T = any> {
+export interface IApiResponse<T> {
   statusCode: string;
   message: string;
   success: boolean;

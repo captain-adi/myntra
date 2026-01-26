@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
-import { useBag } from "../../../context/BagContext";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hook";
+import { setPriceDetails } from "../../../store/bag/BagSlice";
 
 function BagDetails() {
-  const { bagItems, setPriceDetails } = useBag();
+  const dispatch = useAppDispatch();
+  const { bagItems } = useAppSelector((state) => state.bag);
   const [wantDonation, setWantDonation] = useState(false);
   const [donation, setDonation] = useState("0");
   let totalMRP = 0;
@@ -14,7 +16,7 @@ function BagDetails() {
   bagItems.map((items) => {
     totalMRP += Math.floor(items.product.price * items.quantity);
     totalDiscount += Math.floor(
-      items.product.originalPrice - items.product.price
+      items.product.originalPrice - items.product.price,
     );
   });
   let finalMRP = totalMRP + Number(donation);
@@ -23,13 +25,15 @@ function BagDetails() {
   finalMRP += shippingFee + platFormFee;
 
   const handlePriceDetails = () => {
-    setPriceDetails({
-      totalPrice: totalMRP,
-      discount: totalDiscount,
-      platformFee: platFormFee,
-      totalAmount: finalMRP,
-      shippingFee: shippingFee,
-    });
+    dispatch(
+      setPriceDetails({
+        totalPrice: totalMRP,
+        discount: totalDiscount,
+        platformFee: platFormFee,
+        totalAmount: finalMRP,
+        shippingFee: shippingFee,
+      }),
+    );
   };
 
   return (
