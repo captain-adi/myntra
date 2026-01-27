@@ -1,22 +1,34 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Search, Heart, Handbag, User, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProfileDropdown from "../profileDropdown/ProfileDropdown";
 import { useAppSelector } from "../../hooks/hook";
 
+const navLinks = [
+  { label: "MEN", to: "#" },
+  { label: "WOMEN", to: "#" },
+  { label: "KIDS", to: "#" },
+  { label: "HOME & LINING", to: "#" },
+  { label: "BEAUTY", to: "#" },
+  { label: "STUDIO", to: "#" },
+] as const;
+
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user } = useAppSelector((state) => state.auth);
-  const { bagItems } = useAppSelector((state) => state.bag);
+  const { user, bagItems } = useAppSelector((state) => ({
+    user: state.auth.user,
+    bagItems: state.bag.bagItems,
+  }));
+
+  const toggleMenu = useCallback(() => {
+    setMenuOpen((prev) => !prev);
+  }, []);
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50 ">
       <div className="flex justify-between items-center px-4 py-3 md:px-8">
         {/* Hamburger Menu Button */}
-        <button
-          className="text-2xl sm:hidden"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <button className="text-2xl sm:hidden" onClick={toggleMenu}>
           {menuOpen ? <X cursor={"pointer"} /> : <Menu cursor={"pointer"} />}
         </button>
         {/* Logo */}
@@ -30,12 +42,11 @@ function Header() {
 
         {/* Desktop Navbar */}
         <nav className="hidden sm:flex gap-5 text-xs  font-bold">
-          <Link to="#">MEN</Link>
-          <Link to="#">WOMEN</Link>
-          <Link to="#">KIDS</Link>
-          <Link to="#">HOME & LINING</Link>
-          <Link to="#">BEAUTY</Link>
-          <Link to="#">STUDIO</Link>
+          {navLinks.map(({ label, to }) => (
+            <Link key={label} to={to}>
+              {label}
+            </Link>
+          ))}
         </nav>
 
         {/* Search Bar for Desktop */}
@@ -91,25 +102,17 @@ function Header() {
             />
           </div>
           {/* Navigation Links */}
-          <nav className="flex flex-col items-start gap-4 px-4 pb-6 text-sm font-semibold">
-            <Link to="#" onClick={() => setMenuOpen(false)}>
-              MEN
-            </Link>
-            <Link to="#" onClick={() => setMenuOpen(false)}>
-              WOMEN
-            </Link>
-            <Link to="#" onClick={() => setMenuOpen(false)}>
-              KIDS
-            </Link>
-            <Link to="#" onClick={() => setMenuOpen(false)}>
-              HOME & LINING
-            </Link>
-            <Link to="#" onClick={() => setMenuOpen(false)}>
-              BEAUTY
-            </Link>
-            <Link to="#" onClick={() => setMenuOpen(false)}>
-              STUDIO
-            </Link>
+          <nav>
+            {navLinks.map(({ label, to }) => (
+              <Link
+                key={label}
+                to={to}
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-2 border-b w-full"
+              >
+                {label}
+              </Link>
+            ))}
           </nav>
         </div>
       )}
@@ -117,4 +120,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default memo(Header);

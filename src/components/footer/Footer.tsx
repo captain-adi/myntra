@@ -1,45 +1,53 @@
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
-  const footerLinks = [
-    {
-      title: "ONLINE SHOPPING",
-      links: [
-        "Men",
-        "Women",
-        "Kids",
-        "Home & Living",
-        "Beauty",
-        "Gift Card",
-        "Myntra Insider",
-      ],
-    },
-    {
-      title: "CUSTOMER POLICIES",
-      links: [
-        "Contact Us",
-        "FAQ",
-        "T&C",
-        "Terms of Use",
-        "Track Orders",
-        "Shipping",
-        "Returns",
-      ],
-    },
-    {
-      title: "USEFUL LINKS",
-      links: [
-        "Blog",
-        "Careers",
-        "Site Map",
-        "Corporate Information",
-        "Whitehat",
-        "Privacy Policy",
-      ],
-    },
-  ];
+const footerLinks = [
+  {
+    title: "ONLINE SHOPPING",
+    links: [
+      "Men",
+      "Women",
+      "Kids",
+      "Home & Living",
+      "Beauty",
+      "Gift Card",
+      "Myntra Insider",
+    ],
+  },
+  {
+    title: "CUSTOMER POLICIES",
+    links: [
+      "Contact Us",
+      "FAQ",
+      "T&C",
+      "Terms of Use",
+      "Track Orders",
+      "Shipping",
+      "Returns",
+    ],
+  },
+  {
+    title: "USEFUL LINKS",
+    links: [
+      "Blog",
+      "Careers",
+      "Site Map",
+      "Corporate Information",
+      "Whitehat",
+      "Privacy Policy",
+    ],
+  },
+] as const;
 
+const socialLinks = [
+  { icon: Facebook, hoverColor: "hover:text-blue-500", label: "Facebook" },
+  { icon: Instagram, hoverColor: "hover:text-pink-500", label: "Instagram" },
+  { icon: Twitter, hoverColor: "hover:text-blue-400", label: "Twitter" },
+  { icon: Youtube, hoverColor: "hover:text-red-500", label: "Youtube" },
+] as const;
+
+const Footer = () => {
   return (
     <footer className=" relative bottom-0">
       <div className="py-8 bg-gray-200 flex justify-evenly flex-wrap">
@@ -69,22 +77,20 @@ const Footer = () => {
         </p>
 
         <div className="flex space-x-4">
-          <Link to="#" className="text-gray-600 hover:text-blue-500">
-            <Facebook size={20} />
-          </Link>
-          <Link to="#" className="text-gray-600 hover:text-pink-500">
-            <Instagram size={20} />
-          </Link>
-          <Link to="#" className="text-gray-600 hover:text-blue-400">
-            <Twitter size={20} />
-          </Link>
-          <Link to="#" className="text-gray-600 hover:text-red-500">
-            <Youtube size={20} />
-          </Link>
+          {socialLinks.map(({ icon: Icon, hoverColor, label }) => (
+            <Link
+              key={label}
+              to="#"
+              className={`text-gray-600 ${hoverColor}`}
+              aria-label={label}
+            >
+              <Icon size={20} />
+            </Link>
+          ))}
         </div>
       </div>
     </footer>
   );
 };
 
-export default Footer;
+export default memo(Footer);

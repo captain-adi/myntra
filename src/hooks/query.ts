@@ -4,6 +4,7 @@ import type {
   IAddress,
   IApiResponse,
   IBagItemsResponse,
+  ICategory,
   IErrorResponse,
   ILoginResponse,
 } from "../type/type";
@@ -17,6 +18,16 @@ import {
 } from "../store/auth/AuthSlice";
 import { useAppDispatch, useAppSelector } from "./hook";
 import { setBagItems } from "../store/bag/BagSlice";
+
+export const useFetchCategoryies = () => {
+  return useQuery({
+    queryKey: ["categories"],
+    queryFn: async (): Promise<IApiResponse<ICategory[]>> => {
+      const res = await axios.get("/category");
+      return res.data;
+    },
+  });
+};
 
 export const useLogin = () => {
   const dispatch = useAppDispatch();
@@ -160,35 +171,37 @@ export const useAddToBag = () => {
     },
     onSuccess: (response) => {
       const quantity = response.data.quantity;
-      const product = products.find(
-        (items) => items.productId === response.data.productId,
-      );
       const existingItem = bagItems.find(
         (item) => item.product._id === response.data.productId,
       );
       if (existingItem) {
-        // Increment quantity immutably
+        // Update quantity of existing item
         const updated = bagItems.map((item) =>
           item.product._id === response.data.productId
             ? { ...item, quantity: response.data.quantity }
             : item,
         );
         dispatch(setBagItems(updated));
-        handleSuccess("Item quantity updated in bag");
-      }
-      if (product) {
-        dispatch(
-          setBagItems([
-            ...bagItems,
-            {
-              product: product,
-              quantity: quantity,
-              _id: response.data._id,
-            },
-          ]),
+        handleSuccess("Updated quantity in bag");
+      } else {
+        // Add new item to bag
+        const product = products.find(
+          (items) => items._id === response.data.productId,
         );
+        if (product) {
+          dispatch(
+            setBagItems([
+              ...bagItems,
+              {
+                product: product,
+                quantity: quantity,
+                _id: response.data._id,
+              },
+            ]),
+          );
+          handleSuccess(response.message);
+        }
       }
-      handleSuccess(response.message);
     },
     onError: (error: IErrorResponse) => {
       console.error("Add to bag failed:", error);

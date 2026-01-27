@@ -1,32 +1,22 @@
-import { useEffect, useState } from "react";
+import { memo } from "react";
 
 import { Link } from "react-router-dom";
-import axios from "../../api/apiconfig";
-import type { ICategory } from "../../type/type";
+
+import { useFetchCategoryies } from "../../hooks/query";
 function CategorySection() {
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const { data: categories, isLoading } = useFetchCategoryies();
 
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const apiResponse = await axios("/category");
-        const { data } = apiResponse.data;
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategory();
-  }, []);
-
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
-    <>
-      <h3 className="bagCategorieshead text-xl ml-3 md:text-3xl font-semibold text-gray-800 mb-0 pb-0 border-b-2 border-gray-200 md:pb-2 md:mb-6 md:mt-8 md:ml-5">
+    <section>
+      <h3 className="text-xl ml-3 md:text-3xl font-semibold text-gray-800 mb-0 pb-0 border-b-2 border-gray-200 md:pb-2 md:mb-6 md:mt-8 md:ml-5">
         CATEGORIES
       </h3>
-      <section className="bagcategory bg-gray-100 py-4 ">
+      <section className="bg-gray-100 py-4 ">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4 md:gap-6 px-4 items-center ">
-          {categories.slice(0, 5)?.map((obj) => (
+          {categories?.data.slice(0, 5)?.map((obj) => (
             <div
               className="bg-white rounded-md shadow-sm overflow-hidden w-full "
               key={obj._id}
@@ -47,8 +37,8 @@ function CategorySection() {
           ))}
         </div>
       </section>
-    </>
+    </section>
   );
 }
 
-export default CategorySection;
+export default memo(CategorySection);
