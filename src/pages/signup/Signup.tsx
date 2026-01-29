@@ -1,4 +1,7 @@
-import { useForm } from "react-hook-form";
+import { useForm, type FieldErrors } from "react-hook-form";
+import { useSignup } from "../../hooks/query";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 type SignupFormInputs = {
   username: string;
@@ -8,9 +11,22 @@ type SignupFormInputs = {
 
 function Signup() {
   const { register, handleSubmit } = useForm<SignupFormInputs>();
+  const navigate = useNavigate();
+  const { mutate: signupMutate, isPending } = useSignup();
 
   const onSubmit = (data: SignupFormInputs) => {
-    console.log(data);
+    signupMutate(data, {
+      onSuccess: () => {
+        navigate("/login");
+      },
+    });
+  };
+
+  const onError = (errors: FieldErrors<SignupFormInputs>) => {
+    const firstError = errors.username || errors.email || errors.password;
+    if (firstError?.message) {
+      toast.error(firstError.message);
+    }
   };
 
   return (
@@ -25,49 +41,87 @@ function Signup() {
           Create Account
         </h1>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form
+          onSubmit={handleSubmit(onSubmit, onError)}
+          className="space-y-5"
+          noValidate
+        >
           <div>
             <input
-              {...register("username")}
+              disabled={isPending}
+              {...register("username", {
+                required: "Username is required",
+                minLength: {
+                  value: 3,
+                  message: "Username must be at least 3 characters",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Username cannot exceed 20 characters",
+                },
+              })}
               type="text"
               placeholder="👤 Username"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 transition bg-white/60"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 transition bg-white/60 disabled:opacity-50"
             />
           </div>
           <div>
             <input
-              {...register("email")}
+              disabled={isPending}
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email address",
+                },
+                maxLength: {
+                  value: 50,
+                  message: "Email cannot exceed 50 characters",
+                },
+              })}
               type="email"
               placeholder="📧 Email"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 transition bg-white/60"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 transition bg-white/60 disabled:opacity-50"
             />
           </div>
           <div>
             <input
-              {...register("password")}
+              disabled={isPending}
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Password cannot exceed 20 characters",
+                },
+              })}
               type="password"
               placeholder="🔒 Password"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 transition bg-white/60"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 transition bg-white/60 disabled:opacity-50"
             />
           </div>
 
           <button
+            disabled={isPending}
             type="submit"
-            className="w-full cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-semibold py-3 rounded-xl shadow-lg transform transition hover:scale-105"
+            className="w-full cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-semibold py-3 rounded-xl shadow-lg transform transition hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            Sign Up
+            {isPending ? "Signing up..." : "Sign Up"}
           </button>
         </form>
 
         {/* Extra Links */}
         <p className="text-center text-gray-600 mt-6">
           Already have an account?{" "}
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="text-pink-500 hover:underline font-medium"
           >
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

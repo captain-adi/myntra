@@ -29,6 +29,7 @@ export const useFetchCategoryies = () => {
   });
 };
 
+// auth related hooks
 export const useLogin = () => {
   const dispatch = useAppDispatch();
 
@@ -36,7 +37,6 @@ export const useLogin = () => {
     mutationKey: ["login"],
     mutationFn: async (data: { email: string; password: string }) => {
       const res = await axios.post("/auth/login", data);
-      console.log("the whole response after login is : ", res.data);
       return res.data;
     },
     onSuccess: (response: IApiResponse<ILoginResponse>) => {
@@ -70,6 +70,27 @@ export const useLogout = () => {
   });
 };
 
+export const useSignup = () => {
+  return useMutation({
+    mutationKey: ["signup"],
+    mutationFn: async (data: {
+      username: string;
+      email: string;
+      password: string;
+    }) => {
+      const res = await axios.post("/auth/signup", data);
+      return res.data;
+    },
+    onSuccess: (response: IApiResponse<null>) => {
+      handleSuccess(response.message);
+    },
+    onError: (error: IErrorResponse) => {
+      handleError(error);
+    },
+  });
+};
+
+// product related hooks
 export const useFetchProducts = () => {
   return useQuery({
     queryKey: ["products"],
@@ -80,6 +101,7 @@ export const useFetchProducts = () => {
   });
 };
 
+// address related hooks
 export const useAddNewAddress = () => {
   const dispatch = useAppDispatch();
   const address = useAppSelector((state) => state.auth.user?.address || []);
@@ -95,7 +117,6 @@ export const useAddNewAddress = () => {
       handleSuccess(response.message);
     },
     onError: (error: IErrorResponse) => {
-      console.error("Hook onError called:", error);
       handleError(error);
     },
   });
@@ -116,7 +137,6 @@ export const useRemoveAddress = () => {
       handleSuccess(response.message);
     },
     onError: (error: IErrorResponse) => {
-      console.error("Remove address failed:", error);
       handleError(error);
     },
   });
@@ -157,6 +177,8 @@ export const usePlaceOrder = () => {
     },
   });
 };
+
+// bag related hooks
 
 export const useAddToBag = () => {
   const dispatch = useAppDispatch();
@@ -205,7 +227,6 @@ export const useAddToBag = () => {
       }
     },
     onError: (error: IErrorResponse) => {
-      console.error("Add to bag failed:", error);
       handleError(error);
     },
   });
@@ -229,7 +250,6 @@ export const useRemoveFromBag = () => {
       dispatch(setBagItems(updatedBagItems));
     },
     onError: (error: IErrorResponse) => {
-      console.error("Remove from bag failed:", error);
       handleError(error);
     },
   });
