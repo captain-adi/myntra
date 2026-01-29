@@ -55,11 +55,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout/address",
-        element: <Address />,
+        element: (
+          <ProtectedRoute>
+            <Address />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/checkout/payment",
-        element: <Payment />,
+        element: (
+          <ProtectedRoute>
+            <Payment />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
