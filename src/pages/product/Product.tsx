@@ -16,7 +16,7 @@ const Product = () => {
   const [quantity] = useState<number>(1);
   const { mutate: addToBag, isPending } = useAddToBag();
   const { id } = useParams();
-  const addToCart = (product: IProduct) => {
+  const addToBagHandler = (product: IProduct) => {
     addToBag({ productId: product._id, quantity: quantity });
   };
   const addToWishlist = (product: IProduct) => {
@@ -90,7 +90,7 @@ const Product = () => {
           <div className="flex  gap-10">
             <button
               className="w-full flex justify-center items-center gap-4  md:w-auto px-8 py-3 bg-[#FF3E6C] text-white font-semibold rounded-sm hover:bg-[#FF5C7E] transition cursor-pointer hover:shadow-lg"
-              onClick={() => addToCart(product)}
+              onClick={() => addToBagHandler(product)}
             >
               <Handbag className="mt-1 text-xl" />
               ADD TO BAG

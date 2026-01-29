@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useLogin } from "../../hooks/query";
 
 function Login() {
@@ -62,12 +62,12 @@ function Login() {
         {/* Extra Links */}
         <p className="text-center text-gray-600 mt-6">
           Don’t have an account?{" "}
-          <a
-            href="/signup"
+          <Link
+            to="/signup"
             className="text-pink-500 hover:underline font-medium"
           >
             Sign Up
-          </a>
+          </Link>
         </p>
       </div>
     </div>

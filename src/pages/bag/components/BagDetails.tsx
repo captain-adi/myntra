@@ -59,7 +59,6 @@ function BagDetails() {
             checked={wantDonation}
             onChange={() => {
               setWantDonation(!wantDonation);
-              console.log(wantDonation);
               if (!wantDonation === false) {
                 setDonation("0");
               }

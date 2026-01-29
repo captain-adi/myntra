@@ -51,7 +51,6 @@ const Payment = () => {
   // const { mutate: placeOrder } = usePlaceOrder();
   const handlePlaceOrder = () => {
     // placeOrder({ addressId: "", paymentMethod: selectedMode });
-    console.log("working fine");
   };
 
   // Find the selected payment option by value

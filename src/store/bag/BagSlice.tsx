@@ -21,7 +21,6 @@ const BagSlice = createSlice({
   initialState,
   reducers: {
     setBagItems: (state, action: PayloadAction<IBagItems[]>) => {
-      console.log(action.payload, "paylaod");
       state.bagItems = action.payload;
     },
     setProducts: (state, action: PayloadAction<IProduct[]>) => {
