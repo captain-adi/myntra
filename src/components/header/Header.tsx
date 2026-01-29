@@ -102,18 +102,6 @@ function Header() {
             />
           </div>
           {/* Navigation Links */}
-          <nav>
-            {navLinks.map(({ label, to }) => (
-              <Link
-                key={label}
-                to={to}
-                onClick={() => setMenuOpen(false)}
-                className="px-4 py-2 border-b w-full"
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
         </div>
       )}
     </header>

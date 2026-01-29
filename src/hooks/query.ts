@@ -17,7 +17,7 @@ import {
   setAddress,
 } from "../store/auth/AuthSlice";
 import { useAppDispatch, useAppSelector } from "./hook";
-import { setBagItems } from "../store/bag/BagSlice";
+import { clearBag, setBagItems } from "../store/bag/BagSlice";
 
 export const useFetchCategoryies = () => {
   return useQuery({
@@ -61,6 +61,7 @@ export const useLogout = () => {
     },
     onSuccess: (response: IApiResponse<null>) => {
       dispatch(checkingLogout());
+      dispatch(clearBag());
       handleSuccess(response.message);
     },
     onError: (error: IErrorResponse) => {

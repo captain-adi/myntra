@@ -41,5 +41,10 @@ const BagSlice = createSlice({
 });
 
 export default BagSlice.reducer;
-export const { setBagItems, setProducts, setPriceDetails, setWishlistItems } =
-  BagSlice.actions;
+export const {
+  setBagItems,
+  setProducts,
+  setPriceDetails,
+  setWishlistItems,
+  clearBag,
+} = BagSlice.actions;
