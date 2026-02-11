@@ -12,6 +12,7 @@ import BagLayout from "../pages/bag/Index";
 import Address from "../pages/address/Address";
 import Payment from "../pages/payment/Payment";
 import AuthProvider from "../components/authProvider/AuthProvider";
+import NotFound from "../pages/notFound";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 
