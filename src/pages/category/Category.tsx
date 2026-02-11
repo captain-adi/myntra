@@ -17,7 +17,7 @@ function Category() {
         const apiResponse = await axios("/product");
         const responseData = apiResponse.data.data;
         const filteredData = responseData.filter(
-          (products: IProduct) => products.category === categoryname
+          (products: IProduct) => products.category === categoryname,
         );
         setCateogryItems(filteredData);
       } catch (error) {

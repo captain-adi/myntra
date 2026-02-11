@@ -3,11 +3,13 @@ import { memo } from "react";
 import { Link } from "react-router-dom";
 
 import { useFetchCategoryies } from "../../hooks/query";
+import CategorySectionSkeleton from "../skeletons/CategorySectionSkeleton";
+import type { ICategory } from "../../type/type";
 function CategorySection() {
   const { data: categories, isLoading } = useFetchCategoryies();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <SkeletonWrapper />;
   }
   return (
     <section>
@@ -16,7 +18,7 @@ function CategorySection() {
       </h3>
       <section className="bg-gray-100 py-4 ">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4 md:gap-6 px-4 items-center ">
-          {categories?.data.slice(0, 5)?.map((obj) => (
+          {categories?.data.slice(0, 5)?.map((obj: ICategory) => (
             <div
               className="bg-white rounded-md shadow-sm overflow-hidden w-full "
               key={obj._id}
@@ -42,3 +44,18 @@ function CategorySection() {
 }
 
 export default memo(CategorySection);
+
+const SkeletonWrapper = memo(() => {
+  return (
+    <div>
+      <h3 className="text-xl ml-3 md:text-3xl font-semibold text-gray-800 mb-0 pb-0 border-b-2 border-gray-200 md:pb-2 md:mb-6 md:mt-8 md:ml-5">
+        CATEGORIES
+      </h3>
+      <div className="flex gap-4 px-4 items-center">
+        {Array.from({ length: 5 }, () => {
+          return <CategorySectionSkeleton />;
+        })}
+      </div>
+    </div>
+  );
+});
