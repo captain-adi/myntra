@@ -71,6 +71,7 @@ export const useLogout = () => {
 };
 
 export const useSignup = () => {
+  const dispatch = useAppDispatch();
   return useMutation({
     mutationKey: ["signup"],
     mutationFn: async (data: {
@@ -81,8 +82,10 @@ export const useSignup = () => {
       const res = await axios.post("/auth/signup", data);
       return res.data;
     },
-    onSuccess: (response: IApiResponse<null>) => {
+    onSuccess: (response: IApiResponse<ILoginResponse>) => {
+      dispatch(checkingLogin(response.data.user));
       handleSuccess(response.message);
+      console.log("signup resposne", response);
     },
     onError: (error: IErrorResponse) => {
       handleError(error);
